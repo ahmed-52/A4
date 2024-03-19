@@ -3,7 +3,7 @@ package cs2110;
 import java.util.Set;
 
 /**
- * An expression tree node representing a fixed real number.
+ * An expression tree node representing a fixed real number
  */
 public class Constant implements Expression {
 
