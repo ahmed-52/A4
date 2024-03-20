@@ -26,26 +26,34 @@ public class Variable implements Expression {
 
     @Override
     public int opCount() {
-        throw new UnsupportedOperationException()
+        return 0;
     }
 
     @Override
     public String infixString() {
-        throw new UnsupportedOperationException();
+        return name;
     }
 
     @Override
     public String postfixString() {
-        throw new UnsupportedOperationException()
+
+        return name;
     }
 
     @Override
     public Expression optimize(VarTable vars) {
-        throw new UnsupportedOperationException()
+
+        try {
+            return new Constant(eval(vars));
+        } catch(UnboundVariableException e){
+            return this;
+        }
     }
 
     @Override
     public Set<String> dependencies() {
-        throw new UnsupportedOperationException()
+
+        throw new UnsupportedOperationException();
+
     }
 }
