@@ -19,29 +19,31 @@ public class Application implements Expression{
         double val = argument.eval(vars);
 
         double answer = func.apply(val);
+
         return answer;
-
-
     }
 
     @Override
     public int opCount() {
-        throw new UnsupportedOperationException();
+        return 1 + argument.opCount();
+
     }
 
     @Override
     public String infixString() {
-        throw new UnsupportedOperationException();
+        String string = func.name();
+        return "(" + string + argument.infixString() + ")";
     }
 
     @Override
     public String postfixString() {
-        throw new UnsupportedOperationException();
+        String string = func.name();
+        return "(" + string + argument.postfixString() + ")";
     }
 
     @Override
     public Expression optimize(VarTable vars) {
-        throw new UnsupportedOperationException();
+
     }
 
     @Override

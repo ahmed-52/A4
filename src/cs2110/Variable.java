@@ -1,6 +1,7 @@
 package cs2110;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Variable implements Expression {
@@ -56,5 +57,13 @@ public class Variable implements Expression {
         Set<String> depend = new HashSet<>();
         depend.add(name);
         return depend;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        assert other != null;
+        assert other instanceof Variable;
+        Variable otherVar = (Variable) other; //Casting to Variable
+        return otherVar.name.equals(this.name);
     }
 }
