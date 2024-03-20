@@ -4,14 +4,24 @@ import java.util.Set;
 
 public class Variable implements Expression {
 
+
     /**
-     * Return the result of evaluating this variable, substituting any variables with their value
-     * in `vars`.  Throws UnboundVariableExpression if this expression contains a variable whose
-     * value is not in `vars`.
+     * The value of this expression.
      */
+    private final String name;
+
+
+    /**
+     * TODO
+     */
+    public Variable(String name) {
+        this.name = name;
+    }
+
+
     @Override
     public double eval(VarTable vars) throws UnboundVariableException {
-        throw new UnsupportedOperationException()
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -21,7 +31,7 @@ public class Variable implements Expression {
 
     @Override
     public String infixString() {
-        throw new UnsupportedOperationException()
+        throw new UnsupportedOperationException();
     }
 
     @Override
