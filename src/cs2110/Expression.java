@@ -24,7 +24,7 @@ public interface Expression {
     /**
      * Return the infix representation of this expression, enclosing every binary operation in
      * parentheses (regardless of whether they are necessary to preserve the order of operations).
-     * Example: "(((1.5 * 2.0) + 3.5) /
+     * Example: "(((1.5 * 2.0) + 3.5) / cos(-4.25))"
      */
     String infixString();
 
