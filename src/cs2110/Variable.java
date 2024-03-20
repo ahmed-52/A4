@@ -21,7 +21,7 @@ public class Variable implements Expression {
 
     @Override
     public double eval(VarTable vars) throws UnboundVariableException {
-        throw new UnsupportedOperationException();
+        return vars.get(name);
     }
 
     @Override
