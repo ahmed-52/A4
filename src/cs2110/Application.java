@@ -4,9 +4,24 @@ import java.util.Set;
 
 public class Application implements Expression{
 
+    private final UnaryFunction func;
+    private final Expression argument;
+
+
+    public Application(UnaryFunction func, Expression argument) {
+        this.func = func;
+        this.argument = argument;
+    }
+
     @Override
     public double eval(VarTable vars) throws UnboundVariableException {
-        return 0;throw new UnsupportedOperationException()
+
+        double val = argument.eval(vars);
+
+        double answer = func.apply(val);
+        return answer;
+
+
     }
 
     @Override
