@@ -1,5 +1,6 @@
 package cs2110;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class Application implements Expression{
@@ -18,9 +19,7 @@ public class Application implements Expression{
 
         double val = argument.eval(vars);
 
-        double answer = func.apply(val);
-
-        return answer;
+        return func.apply(val);
     }
 
     @Override
@@ -44,10 +43,30 @@ public class Application implements Expression{
     @Override
     public Expression optimize(VarTable vars) {
 
+        Expression optimizedExpr = argument.optimize(vars);
+
+        try{
+            double res = func.apply(optimizedExpr.eval(vars));
+            return new Constant(res);
+        }
+        catch(UnboundVariableException e){
+            return new Application(func,optimizedExpr);
+        }
     }
 
     @Override
     public Set<String> dependencies() {
-        throw new UnsupportedOperationException();
+        return argument.dependencies();
+    }
+
+    @Override
+    public boolean equals(Object obj){
+
+        assert obj != null;
+        Application otherObject = (Application)obj;
+        return otherObject.func.name().equals(func.name())
+                && argument.equals(otherObject.argument);
+
+
     }
 }
