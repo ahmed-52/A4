@@ -31,13 +31,13 @@ public class Application implements Expression{
     @Override
     public String infixString() {
         String string = func.name();
-        return "(" + string + argument.infixString() + ")";
+        return string + "("  + argument.infixString() + ")";
     }
 
     @Override
     public String postfixString() {
         String string = func.name();
-        return "(" + string + argument.postfixString() + ")";
+        return argument.postfixString()+" "+string+"()";
     }
 
     @Override

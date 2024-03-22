@@ -10,7 +10,7 @@ public class Operation implements Expression{
     private final Expression rightOperand;
 
 
-    public Operation (Expression leftOperand, Operator op, Expression rightOperand){
+    public Operation (Operator op, Expression leftOperand, Expression rightOperand){
 
         this.op = op;
         this.leftOperand = leftOperand;
@@ -44,6 +44,7 @@ public class Operation implements Expression{
         return left + " " + right + " " + op.symbol();
     }
 
+
     @Override
     public Expression optimize(VarTable vars) {
 
@@ -51,27 +52,43 @@ public class Operation implements Expression{
         Expression right = rightOperand.optimize(vars);
 
         try {
-
-            double res = new Operation(left, op, right).eval(vars);
-
+            double res = new Operation(op, left, right).eval(vars);
             return new Constant(res);
         } catch (UnboundVariableException e) {
-
-            return new Operation(left, op, right);
+            return new Operation(op, left, right);
         }
     }
 
     @Override
     public Set<String> dependencies() {
+        // get the dependencies from the right
         Set<String> right = rightOperand.dependencies();
+
+        // get the dependencies from the left
         Set<String> left = leftOperand.dependencies();
 
+        // combine both dependencies
         Set<String> merged = new HashSet<>();
         merged.addAll(right);
         merged.addAll(left);
+
+
         return merged;
 
 
+
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        assert obj != null;
+        assert obj instanceof Operation;
+        Operation otherObj = (Operation) obj;
+
+        // not sure if by equals they mean right == right and left == left
+        return otherObj.op.symbol().equals(op.symbol()) &&
+                leftOperand.equals(otherObj.leftOperand) &&
+                rightOperand.equals(otherObj.rightOperand);
 
     }
 }
