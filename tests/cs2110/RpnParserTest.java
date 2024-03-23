@@ -22,7 +22,7 @@ class RpnParserTest {
     void testParseVariable() throws IncompleteRpnException, UndefinedFunctionException {
         Expression expr = RpnParser.parse("x", Map.of());
         // TODO: Uncomment this test, adjusting constructor invocations as necessary
-//        assertEquals(new Variable("x"), expr);
+        assertEquals(new Variable("x"), expr);
     }
 
     @Test
@@ -31,13 +31,57 @@ class RpnParserTest {
     void testParseOperation()
             throws UnboundVariableException, IncompleteRpnException, UndefinedFunctionException {
         Expression expr = RpnParser.parse("1 1 +", Map.of());
-        // TODO: Uncomment this test
-//        assertInstanceOf(Operation.class, expr);
+        assertInstanceOf(Operation.class, expr);
         assertEquals(2.0, expr.eval(MapVarTable.empty()));
 
         // TODO: This is not a very thorough test!  Both operands are the same, and the operator is
         // commutative.  Write additional test cases that don't have these properties.
         // You should also write a test case that requires recursive evaluation of the operands.
+
+        Expression exprSubtract = RpnParser.parse("5 3 -", Map.of());
+        assertInstanceOf(Operation.class, exprSubtract);
+        assertEquals(2.0, exprSubtract.eval(MapVarTable.empty()));
+
+        Expression exprDivide = RpnParser.parse("10 2 /", Map.of());
+        assertInstanceOf(Operation.class, exprDivide);
+        assertEquals(5.0, exprDivide.eval(MapVarTable.empty()));
+
+        String complexExpr = "3 5 + 2 * 8 -";
+        Expression expr2 = RpnParser.parse(complexExpr, Map.of());
+        assertEquals(8.0, expr2.eval(MapVarTable.empty()));
+
+        complexExpr = "3 4 * 5 +";
+        expr2 = RpnParser.parse(complexExpr, Map.of());
+        assertEquals(17.0, expr2.eval(MapVarTable.empty()));
+    }
+
+
+    @Test
+    @DisplayName("Parsing and evaluating an expression with variables and operations "
+            + "yields the correct result.")
+    void testVariableOperation()
+        throws UnboundVariableException, IncompleteRpnException, UndefinedFunctionException {
+
+        VarTable vars = new MapVarTable();
+        vars.set("x", 3.0);
+        vars.set("y", 5.0);
+
+        String complexExpr = "x 2 3 * + 4 y / -";
+        Expression expr2 = RpnParser.parse(complexExpr, Map.of());
+        assertEquals(8.2, expr2.eval(vars));
+
+
+        vars = new MapVarTable();
+        vars.set("g", 1123);
+        vars.set("z", 421);
+        vars.set("f", 12);
+        vars.set("c", -2);
+
+
+        complexExpr = "z f g * + c g / -";
+        expr2 = RpnParser.parse(complexExpr, Map.of());
+        assertEquals(13897.0017809439, expr2.eval(vars));
+
 
     }
 
@@ -48,10 +92,22 @@ class RpnParserTest {
             throws UnboundVariableException, IncompleteRpnException, UndefinedFunctionException {
         Expression expr = RpnParser.parse("4 sqrt()", UnaryFunction.mathDefs());
         // TODO: Uncomment this test
-//        assertInstanceOf(Application.class, expr);
+        assertInstanceOf(Application.class, expr);
         assertEquals(2.0, expr.eval(MapVarTable.empty()));
-
     }
+
+    @Test
+    @DisplayName("Nested function application")
+    void testNestedFunctionApplication()
+            throws UnboundVariableException, IncompleteRpnException, UndefinedFunctionException {
+        // Apply the sqrt function to the result of the exp function applied to 4
+        Expression expr = RpnParser.parse("4 exp() sqrt()", UnaryFunction.mathDefs());
+        assertEquals(2.0, expr.eval(MapVarTable.empty()));
+    }
+
+
+
+
 
     @Test
     @DisplayName("Parsing an empty expression should throw an IncompleteRpnException")

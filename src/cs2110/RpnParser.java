@@ -37,10 +37,51 @@ public class RpnParser {
                 Token.Number numToken = (Token.Number) token;
                 stack.push(new Constant(numToken.doubleValue()));
             }
+
+            if (token instanceof Token.Variable) {
+                Token.Variable varToken = (Token.Variable) token;
+                stack.push(new Variable(varToken.value()));
+            }
+
+            if(token instanceof Token.Operator){
+                // cast the token to use the methods of operator
+                Token.Operator tokenOper = (Token.Operator) token;
+
+                // check if stack size is at least 2
+                if (stack.size() < 2 ){ throw new IncompleteRpnException(exprString,stack.size());}
+                Expression toPop1 = stack.pop();
+                Expression toPop2 = stack.pop();
+
+                Operation opp = new Operation
+                        (Operator.fromString(tokenOper.value()),toPop2,toPop1);
+
+                stack.push(opp);
+
+                }
+            if(token instanceof Token.Function){
+                // cast the token
+                Token.Function tokenFunc = (Token.Function) token;
+                if (stack.isEmpty()){ throw new IncompleteRpnException(exprString, 0);}
+
+                // pop expression
+                Expression toPop3 = stack.pop();
+                // parse the token's function name
+                UnaryFunction function = funcDefs.get(tokenFunc.name());
+                if(function == null){throw new UndefinedFunctionException(tokenFunc.name());}
+
+                // create application node and
+                Application app = new Application(function,toPop3);
+                stack.push(app);
+            }
+
+
+
         }
+
+        if(stack.size() != 1){throw new IncompleteRpnException(exprString,stack.size());}
+        return stack.pop();
 
         // TODO: Return the overall expression node.  (This might also be a good place to check that
         // the string really did correspond to a single expression.)
-        throw new UnsupportedOperationException();
     }
 }
