@@ -32,6 +32,7 @@ public class Variable implements Expression {
      */
     @Override
     public double eval(VarTable vars) throws UnboundVariableException {
+        assert vars != null;
         return vars.get(name);
     }
 
@@ -73,6 +74,7 @@ public class Variable implements Expression {
      */
     @Override
     public Expression optimize(VarTable vars) {
+        assert vars != null;
         try {
             return new Constant(eval(vars));
         } catch(UnboundVariableException e){

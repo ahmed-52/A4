@@ -45,6 +45,7 @@ public class Operation implements Expression {
      */
     @Override
     public double eval(VarTable vars) throws UnboundVariableException {
+        assert vars != null;
         return op.operate(leftOperand.eval(vars), rightOperand.eval(vars));
     }
 
@@ -86,6 +87,7 @@ public class Operation implements Expression {
      */
     @Override
     public Expression optimize(VarTable vars) {
+        assert vars != null;
         Expression left = leftOperand.optimize(vars);
         Expression right = rightOperand.optimize(vars);
 
