@@ -34,12 +34,52 @@ public class CsvEvaluator {
         // they are a number or a successfully evaluated formula).
         VarTable vars = new MapVarTable();
 
-        // TODO: Implement this method according to its specification.
-        throw new UnsupportedOperationException();
+        int row = 1;
+        for (CSVRecord record : parser){
+            int column = 1;
+            for (String cell : record){
 
+                // if the cell is a formula
+
+                if(!cell.isEmpty() && cell.charAt(0) == '='){
+                    try{
+
+                        // parse the formula
+                        Expression expr = RpnParser.parse(cell.substring(1),defs);
+                        // append the number the formula evaluates to
+                        double num = expr.eval(vars);
+                        vars.set(colToLetters(column)+row,num);
+                        // print the cell
+                        printer.print(num);
+                    }catch(Exception e){
+                        printer.print("#N/A");
+                    }
+                }
+
+
+                else {
+                    try{
+                    // try to make it a double
+                    double number = Double.parseDouble(cell);
+                    // if successful, add the position and number to vars
+                    vars.set(colToLetters(column)+row,number);
+                    // print the cell
+                    printer.print(cell);
+                    }
+                    catch(Exception e){
+                        printer.print(cell);}
+                }
+                column++;
+            }
+            printer.println();
+            row++;
+        }
         // Note that `CSVParser` implements `Iterable<CSVRecord>` and that `CSVRecord` implements
         // `Iterable<String>`.  This may suggest a solution using "enhanced for-loops" (though this
         // is not strictly required).
+
+
+
     }
 
     /**
@@ -49,14 +89,15 @@ public class CsvEvaluator {
     public static String colToLetters(int n) {
         // Implementation constraint: this method must be implemented recursively.
 
-        // Bijective hexavigesimal (base-26) numeration using the digits 'A'-'Z'.
-        // Let x be the largest multiple of the base strictly less than n.
-        // The rightmost digit of the representation is the difference between x and n (the
-        // "remainder" - may be equal to the base).
-        // The left digits are the representation of x divided by the base (the "quotient").
+        if(n == 0) return "";
 
-        // TODO: Implement this method according to its specification.
-        throw new UnsupportedOperationException();
+        else {
+            // Subtract 1 since ('A'=1) with 0-based calculation logic.
+            n--;
+            char l = (char)('A'+n% 26);
+            return colToLetters(n / 26) + l;
+        }
+
     }
 
     /**

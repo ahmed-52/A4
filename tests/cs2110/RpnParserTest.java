@@ -102,8 +102,38 @@ class RpnParserTest {
             throws UnboundVariableException, IncompleteRpnException, UndefinedFunctionException {
         // Apply the sqrt function to the result of the exp function applied to 4
         Expression expr = RpnParser.parse("4 exp() sqrt()", UnaryFunction.mathDefs());
-        assertEquals(2.0, expr.eval(MapVarTable.empty()));
+        assertEquals(7.38905609893065, expr.eval(MapVarTable.empty()));
     }
+
+    @Test
+    @DisplayName("Testing all of applications")
+    void testAllApplication() throws UnboundVariableException, IncompleteRpnException,
+            UndefinedFunctionException {
+
+        Expression expr = RpnParser.parse("0 sin()", UnaryFunction.mathDefs());
+        assertEquals(0, expr.eval(MapVarTable.empty()));
+
+        expr = RpnParser.parse("0 cos()", UnaryFunction.mathDefs());
+        assertEquals(1, expr.eval(MapVarTable.empty()));
+
+        expr = RpnParser.parse("0 tan()", UnaryFunction.mathDefs());
+        assertEquals(0, expr.eval(MapVarTable.empty()));
+
+        expr = RpnParser.parse("y 2 / sin()", UnaryFunction.mathDefs());
+        assertEquals(0.8414709848078965, expr.eval(MapVarTable.of("y",2)));
+
+
+    }
+
+    @Test
+    @DisplayName("Nested function application and operation")
+    void testNestedFunctionApplicationOperation()
+            throws UnboundVariableException, IncompleteRpnException, UndefinedFunctionException {
+        // Apply the sqrt function to the result of the exp function applied to 4
+        Expression expr = RpnParser.parse("5 3 ^ 4 * 16 sqrt() + 8 2 * 4 2 ^ / -", UnaryFunction.mathDefs());
+        assertEquals(503, expr.eval(MapVarTable.empty()));
+    }
+
 
 
 
